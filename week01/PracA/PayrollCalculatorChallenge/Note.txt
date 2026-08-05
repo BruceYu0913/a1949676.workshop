@@ -1,0 +1,14 @@
+###
+
+Most C# statements end with a semicolon.
+
+Python statements usually do not need a semicolon.
+
+###
+
+In C#, the program needs to be started in main()
+
+###
+
+Python does not have strict, enforced private variables.
+
