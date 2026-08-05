@@ -1,0 +1,11 @@
+# .NET generated files
+bin/
+obj/
+
+# Visual Studio
+.vs/
+*.user
+*.suo
+
+# VS Code
+.vscode/
