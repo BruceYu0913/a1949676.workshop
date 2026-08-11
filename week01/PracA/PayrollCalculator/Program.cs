@@ -40,7 +40,9 @@
         }
         catch (ArgumentException exception)
         {
-            Console.WriteLine($"Error: {exception.Message}");
+            Console.WriteLine(
+                $"Error: {exception.Message}"
+            );
         }
     }
 
