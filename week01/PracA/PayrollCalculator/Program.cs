@@ -44,6 +44,20 @@
                 $"Error: {exception.Message}"
             );
         }
+        try
+        {
+            Person person = new Person("Ada", "Lovelace", 36);
+
+            Console.WriteLine($"First name: {person.FirstName}");
+            Console.WriteLine($"Last name: {person.LastName}");
+            Console.WriteLine($"Age: {person.Age}");
+            Console.WriteLine($"Full name: {person.FullName()}");
+            Console.WriteLine($"Is adult: {person.IsAdult()}");
+        }
+        catch (ArgumentException exception)
+        {
+            Console.WriteLine($"Error: {exception.Message}");
+        }
     }
 
     private static double CalculatePay(
