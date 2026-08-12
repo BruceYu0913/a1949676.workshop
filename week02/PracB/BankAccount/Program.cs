@@ -36,6 +36,16 @@ public class BankAccount
         Balance += amount;
     }
 
+    public void Deposit(int amount)
+    {
+        Deposit((decimal)amount);
+    }
+
+    public void Deposit(double amount)
+    {
+        Deposit((decimal)amount);
+    }
+
     public void Withdraw(decimal amount)
     {
         if (amount < 0)
@@ -68,8 +78,17 @@ class Program
             Console.WriteLine($"Owner: {account.Owner}");
             Console.WriteLine($"Starting balance: ${account.Balance:F2}");
 
-            account.Deposit(200.00m);
-            Console.WriteLine($"Balance after deposit: ${account.Balance:F2}");
+            Console.WriteLine("Deposit(decimal): $200.50");
+            account.Deposit(200.50m);
+            Console.WriteLine($"Balance: ${account.Balance:F2}");
+
+            Console.WriteLine("Deposit(int): $100");
+            account.Deposit(100);
+            Console.WriteLine($"Balance: ${account.Balance:F2}");
+
+            Console.WriteLine("Deposit(double): $50.25");
+            account.Deposit(50.25);
+            Console.WriteLine($"Balance: ${account.Balance:F2}");
 
             account.Withdraw(150.00m);
             Console.WriteLine($"Balance after withdrawal: ${account.Balance:F2}");
