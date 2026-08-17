@@ -1,0 +1,11 @@
+What I learned
+
+I practised implementing a BankAccount class using auto-properties, constructors, and methods. I used decimal for financial values and added overloaded Deposit methods for decimal, int, and double arguments. This helped me understand how C# selects a method based on the parameter type and how values can be converted before reusing the main Deposit(decimal) method.
+
+I also learned how to create a separate xUnit project, reference the main BankAccount project, and use [Fact], Assert.Equal(), and Assert.Throws() to test normal and exceptional behaviour. I wrote tests for construction, deposits, withdrawals, invalid values, insufficient balance, and method overloads.
+
+Difficulties and resolutions
+
+The test project initially could not recognise the BankAccount class. I discovered that the test project was placed inside the main project and that its project-reference path became incorrect after restructuring the folders. I moved both projects into a parallel structure, corrected the reference, and made BankAccount public.
+
+Four tests also failed because they expected zero-value transactions to throw exceptions. The implementation intentionally allows zero as a valid no-op. I corrected the tests so that zero confirms an unchanged balance, while negative amounts test the exception paths. This made the tests accurately reflect the intended behaviour.
