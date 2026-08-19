@@ -4,38 +4,38 @@
     {
         try
         {
-            FullTimeEmployee fullTimeEmployee =
-                new FullTimeEmployee(
-                    "Bruce",
-                    75000.00m
+            List<Employee> employees =
+                new List<Employee>
+                {
+                    new FullTimeEmployee(
+                        "Bruce",
+                        75000.00m
+                    ),
+
+                    new Contractor(
+                        "Yu",
+                        50.00m,
+                        40.00m
+                    )
+                };
+
+            foreach (Employee employee in employees)
+            {
+                decimal netPay =
+                    employee.CalculatePay();
+
+                decimal grossPay =
+                    netPay / (1 - Employee.TaxRate);
+
+                decimal tax =
+                    grossPay - netPay;
+
+                Console.WriteLine(
+                    $"{employee.Name}: " +
+                    $"Pay ${netPay:F2}. " +
+                    $"Tax ${tax:F2}."
                 );
-
-            Contractor contractor =
-                new Contractor(
-                    "Yu",
-                    50.00m,
-                    40.00m
-                );
-
-            Console.WriteLine("FULL-TIME EMPLOYEE");
-
-            fullTimeEmployee.GenerateReport();
-
-            Console.WriteLine(
-                $"CalculatePay result: " +
-                $"${fullTimeEmployee.CalculatePay():F2}"
-            );
-
-            Console.WriteLine();
-
-            Console.WriteLine("CONTRACTOR");
-
-            contractor.GenerateReport();
-
-            Console.WriteLine(
-                $"CalculatePay result: " +
-                $"${contractor.CalculatePay():F2}"
-            );
+            }
         }
         catch (ArgumentException exception)
         {
