@@ -1,0 +1,9 @@
+Inheritance allows FullTimeEmployee and Contractor to reuse the common state and contract defined by Employee. Polymorphism additionally allows both derived objects to be stored as Employee references and accessed through the same CalculatePay() call. At runtime, C# selects the overridden implementation belonging to the object's actual type. This allowed me to process a mixed List<Employee> with one foreach loop without writing separate loops or type checks.
+
+How is this similar to or different from Python's behaviour?
+
+The result is similar to Python because calling the same method on different objects can produce type-specific behaviour. The main difference is that C# requires the relationship to be declared explicitly. Employee defines an abstract CalculatePay() method, and each derived class implements it using override. C# also checks type compatibility at compile time. Python is more dynamic and generally allows method overriding without abstract types, virtual methods, or explicit override keywords.
+
+Difficulties and resolution
+
+The main difficulty was interpreting the coverage report. FullTimeEmployee and Contractor reached 100%, but Program.cs was untested and Employee.cs still showed one uncovered line. I determined that Program.cs is demonstration code outside the task's unit-testing scope. The remaining Employee line could be an auto-property accessor, constant, abstract declaration, or an old merged coverage result. I learned to inspect the class-level report for the exact red line and generate a fresh report before changing the tests.
