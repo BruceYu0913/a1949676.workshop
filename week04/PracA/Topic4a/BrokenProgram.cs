@@ -1,56 +1,111 @@
-﻿namespace Topic4a;
+﻿using System.Globalization;
 
-public static class BrokenProgram
+namespace Topic4a
 {
-    static void Main(string[] args)
+    internal static class BrokenProgram
     {
-        const string input = """
-           23
-           + 
-           77
-           + 
-            3
-           + 
-          457
-           * 
-            2
-             
-          """;
+        private const int ExpectedTotal = 1120;
 
-        string[] lines = input.Split("\n");
-        List<string> tokens = new List<string>();
-
-        foreach (string line in lines)
+        private static readonly Dictionary<string, string> Resources = new()
         {
-            string trimmedLine = line.Trim();
+            ["RightAnswer"] = "Your answer was RIGHT!",
+            ["WrongAnswer"] = "Your answer was WRONG!\nGo and fix it."
+        };
 
-            if (trimmedLine != "")
-            {
-                tokens.Add(trimmedLine);
-            }
+        private static void Main()
+        {
+            const string input = """
+               23
+               + 
+               77
+               + 
+                3
+               + 
+              457
+               * 
+                2
+                 
+              """;
+
+            List<string> tokens = ExtractTokens(input);
+            int total = CalculateTotal(tokens);
+
+            PrintResult(total);
         }
 
-        int total = int.Parse(tokens[0]);
-
-        for (int i = 1; i < tokens.Count; i += 2)
+        private static List<string> ExtractTokens(
+            string input
+        )
         {
-            string symbol = tokens[i];
-            int value = int.Parse(tokens[i + 1]);
+            string[] lines = input.Split('\n');
+            List<string> tokens = [];
 
-            if (symbol == "+")
+            foreach (string line in lines)
             {
-                total += value;
+                string trimmedLine = line.Trim();
+
+                if (!string.IsNullOrEmpty(trimmedLine))
+                {
+                    tokens.Add(trimmedLine);
+                }
             }
-            else if (symbol == "*")
-            {
-                total *= value;
-            }
+
+            return tokens;
         }
 
-        Console.WriteLine("Total was: " + total);
-        Console.WriteLine("Expected total was: 1120");
-        Console.WriteLine(total == 1120
-                ? "Your answer was RIGHT!"
-                : "Your answer was WRONG!\nGo and fix it." );
+        private static int CalculateTotal(
+            List<string> tokens
+        )
+        {
+            int total = int.Parse(
+                tokens[0],
+                CultureInfo.InvariantCulture
+            );
+
+            for (int i = 1; i < tokens.Count; i += 2)
+            {
+                string symbol = tokens[i];
+
+                int value = int.Parse(
+                    tokens[i + 1],
+                    CultureInfo.InvariantCulture
+                );
+
+                if (symbol == "+")
+                {
+                    total += value;
+                }
+                else if (symbol == "*")
+                {
+                    total *= value;
+                }
+                else
+                {
+                    throw new InvalidOperationException(
+                        "Unsupported symbol: " + symbol
+                    );
+                }
+            }
+
+            return total;
+        }
+
+        private static void PrintResult(int total)
+        {
+            string totalMessage =
+                "Total was: " + total;
+
+            string expectedMessage =
+                "Expected total was: " + ExpectedTotal;
+
+            string resultMessage =
+                total == ExpectedTotal
+                                        ? Resources["RightAnswer"]
+                                        : Resources["WrongAnswer"];
+
+            Console.WriteLine(totalMessage);
+            Console.WriteLine(expectedMessage);
+            Console.WriteLine(resultMessage);
+        }
     }
 }
