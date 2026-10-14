@@ -1,81 +1,105 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
+﻿using System.Diagnostics;
 using System.Text.Json;
 
 class Program
 {
     private static void Main()
     {
-        string folderPath = "./Attachments";
-        string filePath = "./Attachments/Players.json";
+        string path = "./Attachments/Players.json";
 
-        Directory.CreateDirectory(folderPath);
+        /*
+        List<Player> players = new List<Player>();
 
-        // 1. Create five Player objects.
-        List<Player> players = new List<Player>
+        for (int i = 0; i < 10000; i++)
         {
-            new Player("Bruce", 100, 20, 10),
-            new Player("Yu", 95, 25, 8),
-            new Player("Tony", 110, 15, 12),
-            new Player("Josh", 90, 30, 6),
-            new Player("Ayo", 105, 18, 15)
-        };
-
-        Console.WriteLine("Original players:");
-
-        foreach (Player player in players)
-        {
-            Console.WriteLine(player);
+            players.Add(
+                new Player($"Player{i + 1}")
+            );
         }
 
-        // 2. Convert the List<Player> into JSON.
-        JsonSerializerOptions options =
-            new JsonSerializerOptions
-            {
-                WriteIndented = true
-            };
+        FileWriter(path, players);
 
-        string jsonString =
-            JsonSerializer.Serialize(
-                players,
-                options
-            );
+        List<Player> loadedPlayers =
+            FileReader<List<Player>>(path);
 
-        // 3. Print the JSON first.
-        Console.WriteLine();
-        Console.WriteLine("Serialised JSON:");
-        Console.WriteLine(jsonString);
-
-        // 4. Write the JSON to disk.
-        File.WriteAllText(
-            filePath,
-            jsonString
-        );
-
-        Console.WriteLine();
         Console.WriteLine(
-            $"JSON saved to {filePath}"
+            $"List count: {loadedPlayers.Count}"
         );
 
-        // 5. Read the JSON from disk.
-        string loadedJson =
-            File.ReadAllText(filePath);
+        GC.Collect();
 
-        List<Player>? loadedPlayers =
-            JsonSerializer.Deserialize<List<Player>>(
-                loadedJson
-            );
+        Console.WriteLine(
+            $"List HeapSizeBytes: " +
+            $"{GC.GetGCMemoryInfo().HeapSizeBytes}"
+        );
 
-        Console.WriteLine();
-        Console.WriteLine("Loaded players:");
+        Console.WriteLine(
+            $"List PeakWorkingSet64: " +
+            $"{Process.GetCurrentProcess().PeakWorkingSet64}"
+        );
 
-        if (loadedPlayers != null)
+        GC.KeepAlive(players);
+        GC.KeepAlive(loadedPlayers);
+        */
+
+
+        LinkedList<Player> players =
+            new LinkedList<Player>();
+
+        for (int i = 0; i < 10000; i++)
         {
-            foreach (Player player in loadedPlayers)
-            {
-                Console.WriteLine(player);
-            }
+            players.AddLast(
+                new Player($"Player{i + 1}")
+            );
         }
+
+        FileWriter(path, players);
+
+        LinkedList<Player> loadedPlayers =
+            FileReader<LinkedList<Player>>(path);
+
+        Console.WriteLine(
+            $"LinkedList count: {loadedPlayers.Count}"
+        );
+
+        GC.Collect();
+
+        Console.WriteLine(
+            $"LinkedList HeapSizeBytes: " +
+            $"{GC.GetGCMemoryInfo().HeapSizeBytes}"
+        );
+
+        Console.WriteLine(
+            $"LinkedList PeakWorkingSet64: " +
+            $"{Process.GetCurrentProcess().PeakWorkingSet64}"
+        );
+
+        GC.KeepAlive(players);
+        GC.KeepAlive(loadedPlayers);
+    }
+
+    public static void FileWriter<T>(
+        string path,
+        T objectToWrite
+    )
+        where T : class
+    {
+        string jsonString =
+            JsonSerializer.Serialize(objectToWrite);
+
+        File.WriteAllText(path, jsonString);
+    }
+
+    public static T FileReader<T>(
+        string path
+    )
+        where T : class
+    {
+        string jsonString =
+            File.ReadAllText(path);
+
+        return JsonSerializer.Deserialize<T>(
+            jsonString
+        )!;
     }
 }
